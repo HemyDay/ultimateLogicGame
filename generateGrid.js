@@ -157,15 +157,14 @@ function setMinMaxValues(gameType, template){
 
 
 }
-
-// DEFINES THE MAXIMUM VALUE FOR A CELL DEPENDING ON THE GAME TYPE
-function maxPossibleValue(gameType, template){
+// DEFINES MAXIMUM VALUE FOR A CELL DEPENDING ON THE GAME TYPE AND ADDS IT AS AN ATTRIBUTE
+function setMaxPossibleValue(gameType, template){
 
         let allCells = document.querySelectorAll(`.cell.${gameType}`);
 
         if (gameType === 'sudoku' ) {allCells.forEach((cell) => cell.setAttribute('max', '9'))};
 
-        if (gameType === 'binero' ) {allCells.forEach((cell) => cell.setAttribute('max', '1'))};
+        if (gameType === 'binero' ) {allCells.forEach((cell) => cell.setAttribute('max', '1') )};
 
         if (gameType === 'tectonic'){
 
@@ -245,15 +244,18 @@ function maxPossibleValue(gameType, template){
         };
 }
 
-// DEFINES MINIMUM VALUE FOR A CELL DEPENTING ON THE GAME TYPE
-function minPossibleValue(gameType, template, cell){
-    if (gameType === 'sudoku' ) { return 1 };
+// DEFINES MINIMUM VALUE FOR A CELL DEPENTING ON THE GAME TYPE AND ADDS IT AS AN ATTRIBUTE
+function setMinPossibleValue(gameType){
 
-    if (gameType === 'binero' ) { return 0 };
+    let allCells = document.querySelectorAll(`.cell.${gameType}`);
 
-    if (gameType === 'tectonic'){ return 1 };
+    if (gameType === 'sudoku' )  {allCells.forEach((cell) => cell.setAttribute('min', '1'))};
 
-    if (gameType === 'yakazu')  { return 1 };
+    if (gameType === 'binero' )  {allCells.forEach((cell) => cell.setAttribute('min', '0'))};
+
+    if (gameType === 'tectonic') {allCells.forEach((cell) => cell.setAttribute('min', '1'))};
+
+    if (gameType === 'yakazu')   {allCells.forEach((cell) => cell.setAttribute('min', '1'))};
 
 }
 
@@ -303,7 +305,7 @@ function generateGrid(template, elementHTML, gameType){
         drawZones(template, gameType)
     };
 
-    maxPossibleValue(gameType, template);
+    setMaxPossibleValue(gameType, template);
 
 }
 
@@ -320,4 +322,3 @@ generateGrid(GRID_TEMPLATE_YAKAZU[0] , GRID_ELEMENT_YAKAZU, 'yakazu');
 
 const GRID_ELEMENT_TECTONIC = document.getElementById('tectonicGrid');
 generateGrid(GRID_TEMPLATE_TECTONIC[0], GRID_ELEMENT_TECTONIC, 'tectonic');
-
