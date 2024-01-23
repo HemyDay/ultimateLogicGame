@@ -1,0 +1,23 @@
+.cell {
+    border: solid 0.5px lightblue;
+    text-align: center;
+    line-height: 50px;
+}
+
+.block {
+    background-color: black;
+}
+
+.cell[writable='false']{
+    font-weight: bold;
+}
+
+.gameContainer {
+    border: solid 1px black;
+}
+
+h3 , .gameContainer {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}

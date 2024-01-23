@@ -1,0 +1,25 @@
+________________________________________________________________________________________________________
+
+// SUDOKU
+    // id           = COL.ROW.ZONE
+    // writable     = boolean (false)                // CAN WE WRITE ON IT
+    // value        = int (0) || []                  // VALUE (1-9)
+
+// BINERO
+    // id           = COL.ROW
+    // writable     = boolean (false)                // CAN WE WRITE ON IT
+    // value        = int (0) || null                // VALUE (0-1)
+
+// TECTONIC
+    // id           = COL.ROW.ZONE
+    // writable     = boolean (false)                // CAN WE WRITE ON IT
+    // value        = int (0) || []                  // VALUE (1-9)
+
+// YA'KAZU
+    // id           = COL.ROW
+    // writable     = boolean (false)                // CAN WE WRITE ON IT
+    // blocked      = boolean (false)                // IS IT A BLACK SQUARE
+    // value        = int (0) || null                // VALUE (0-9)
+
+________________________________________________________________________________________________________
+
