@@ -154,34 +154,93 @@ function drawZones(template, gameType){
 // FUNCTION TO ADD 'min' and 'max' ATTRIBUTES TO THE HTML ELEMENT OF THE CELLS
 function setMinMaxValues(gameType, template){
     
-    let allCells = document.querySelectorAll(`.cell.${gameType}`);
 
-    allCells.forEach(function (cell) {
-        if (cell.getAttribute('writeable') == 'true') {
-            cell.setAttribute('max', `${maxPossibleValue(gameType, template, cell )}`)
-            cell.setAttribute('min', `${minPossibleValue(gameType)}`)
-        }
-        
-    });
 
 }
 
 // DEFINES THE MAXIMUM VALUE FOR A CELL DEPENDING ON THE GAME TYPE
-function maxPossibleValue(gameType, template, cell){
-        if (gameType === 'sudoku' ) { return 9 };
+function maxPossibleValue(gameType, template){
 
-        if (gameType === 'binero' ) { return 1 } ;
+        let allCells = document.querySelectorAll(`.cell.${gameType}`);
+
+        if (gameType === 'sudoku' ) {allCells.forEach((cell) => cell.setAttribute('max', '9'))};
+
+        if (gameType === 'binero' ) {allCells.forEach((cell) => cell.setAttribute('max', '1'))};
 
         if (gameType === 'tectonic'){
 
-            let cellID = cell.getAttribute("id").split(".");
-            let Z = Number(cellID[2]);     
-            return template.zones[Z-1].length ;
-
+            allCells.forEach(function (cell) {
+                if (cell.getAttribute('writeable') == 'true') {
+                    let cellID = cell.getAttribute("id").split(".");
+                    let Z = Number(cellID[2]);   
+                    cell.setAttribute('max', `${template.zones[Z-1].length}`)
+                }
+                
+            });
         };
 
         if (gameType === 'yakazu'){
-            // TO DO LATER
+
+            // create an arry for cols and rows where 0 = black cell and 1 = value cell
+            let binaryValuesRows = [];
+            let binaryValuesCols = [];
+
+            // For the rows
+            for (let c = 0; c < template.values.length; c++) {
+                let thisRow = template.values[c].map(function (v) { if (v == 'bk') { return 0 } else { return 1 }});
+                binaryValuesRows.push(thisRow.join('').replaceAll('0', '-0-').replaceAll('--', '-').split('-').filter((str) => str.length !== 0)); 
+            }
+
+            
+            // For the cols
+            for (let r = 0; r < template.values[0].length; r++) {
+                let thisCol = []
+
+                for (let c = 0; c < template.values.length; c++) {
+                    thisCol.push(template.values[c][r])
+                }
+
+                thisCol = thisCol.map(function (v) { if (v == 'bk') { return 0 } else { return 1 }});   
+
+                binaryValuesCols.push(thisCol.join('').replaceAll('0', '-0-').replaceAll('--', '-').split('-').filter((str) => str.length !== 0)); 
+            }
+
+
+            // Changes 0 and 1 to the max value
+            let ValuesRows = [];
+
+            for (let br = 0; br < binaryValuesRows.length; br++) {
+                ValuesRows.push([]);
+                for (let sbr = 0; sbr < binaryValuesRows[br].length; sbr++) {
+                    for (let ssbr = 0; ssbr < binaryValuesRows[br][sbr].length; ssbr++) {
+                        ValuesRows[br].push(binaryValuesRows[br][sbr].length)
+                    }
+                }
+            }
+
+            let ValuesCols = [];
+
+            for (let br = 0; br < binaryValuesCols.length; br++) {
+                ValuesCols.push([]);
+                for (let sbr = 0; sbr < binaryValuesCols[br].length; sbr++) {
+                    for (let ssbr = 0; ssbr < binaryValuesCols[br][sbr].length; ssbr++) {
+                        ValuesCols[br].push(binaryValuesCols[br][sbr].length)
+                    }
+                }
+            }
+
+            
+            allCells.forEach(function (cell) {
+                let cellID = cell.getAttribute("id").split(".");
+                let R = Number(cellID[0] - 1 );                   // row number
+                let C = Number(cellID[1] - 1 ) ;                  // column number
+
+                if (ValuesCols[C][R] > ValuesRows[R][C]){
+                    cell.setAttribute('max', `${ValuesCols[C][R]}`)
+                } else {
+                    cell.setAttribute('max', `${ValuesRows[R][C]}`)
+                }
+            });
 
         };
 }
@@ -244,7 +303,7 @@ function generateGrid(template, elementHTML, gameType){
         drawZones(template, gameType)
     };
 
-    setMinMaxValues(gameType, template);
+    maxPossibleValue(gameType, template);
 
 }
 

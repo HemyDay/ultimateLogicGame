@@ -25,4 +25,3 @@
     // ISN'T POSSIBLE (LENGTH)  | ROW ________________________ CHECKED CELL     | ERROR
     // ISN'T POSSIBLE (LENGTH)  | COL ________________________ CHECKED CELL     | ERROR
 
-
