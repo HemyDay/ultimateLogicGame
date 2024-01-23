@@ -8,7 +8,7 @@
     background-color: black;
 }
 
-.cell[writable='false']{
+.cell[writeable='false']{
     font-weight: bold;
 }
 

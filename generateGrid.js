@@ -105,7 +105,8 @@ const GRID_TEMPLATE_YAKAZU = [
 
 function drawBorderOfZones(gameType){
     let allCells = document.querySelectorAll(`.cell.${gameType}`)
-    allCells.forEach( function (cell) {
+
+    allCells.forEach(function (cell) {
         let cellID = cell.getAttribute("id").split(".");
         let R = Number(cellID[0]);     // row number
         let C = Number(cellID[1]);     // column number
@@ -150,6 +151,54 @@ function drawZones(template, gameType){
     drawBorderOfZones(gameType);
 }
 
+// FUNCTION TO ADD 'min' and 'max' ATTRIBUTES TO THE HTML ELEMENT OF THE CELLS
+function setMinMaxValues(gameType, template){
+    
+    let allCells = document.querySelectorAll(`.cell.${gameType}`);
+
+    allCells.forEach(function (cell) {
+        if (cell.getAttribute('writeable') == 'true') {
+            cell.setAttribute('max', `${maxPossibleValue(gameType, template, cell )}`)
+            cell.setAttribute('min', `${minPossibleValue(gameType)}`)
+        }
+        
+    });
+
+}
+
+// DEFINES THE MAXIMUM VALUE FOR A CELL DEPENDING ON THE GAME TYPE
+function maxPossibleValue(gameType, template, cell){
+        if (gameType === 'sudoku' ) { return 9 };
+
+        if (gameType === 'binero' ) { return 1 } ;
+
+        if (gameType === 'tectonic'){
+
+            let cellID = cell.getAttribute("id").split(".");
+            let Z = Number(cellID[2]);     
+            return template.zones[Z-1].length ;
+
+        };
+
+        if (gameType === 'yakazu'){
+            // TO DO LATER
+
+        };
+}
+
+// DEFINES MINIMUM VALUE FOR A CELL DEPENTING ON THE GAME TYPE
+function minPossibleValue(gameType, template, cell){
+    if (gameType === 'sudoku' ) { return 1 };
+
+    if (gameType === 'binero' ) { return 0 };
+
+    if (gameType === 'tectonic'){ return 1 };
+
+    if (gameType === 'yakazu')  { return 1 };
+
+}
+
+// GENERAL FUNCTION THAT GENERATES A GRID
 function generateGrid(template, elementHTML, gameType){
     // SET GRID ENVIRONEMENT
     elementHTML.style.display = "grid";
@@ -163,7 +212,8 @@ function generateGrid(template, elementHTML, gameType){
             if (template.values[i][j] == 'bk') {
                 elementHTML.innerHTML += `
                 <div 
-                writable='false'
+                writeable='false'
+                max='0'
                 class='cell ${gameType} block' 
                 id='${i+1}.${j+1}'> 
                 
@@ -171,7 +221,7 @@ function generateGrid(template, elementHTML, gameType){
             } else if (template.values[i][j] !== null) {
                 elementHTML.innerHTML += `
                 <div 
-                writable='false'
+                writeable='false'
                 class='cell ${gameType}' 
                 id='${i+1}.${j+1}'>
                     ${template.values[i][j]}
@@ -179,7 +229,7 @@ function generateGrid(template, elementHTML, gameType){
             } else {
                 elementHTML.innerHTML += `
                 <div 
-                writable='true'
+                writeable='true'
                 class='cell ${gameType}' 
                 id='${i+1}.${j+1}'> 
                 
@@ -193,6 +243,8 @@ function generateGrid(template, elementHTML, gameType){
     if (template.zones[0] !== undefined) { 
         drawZones(template, gameType)
     };
+
+    setMinMaxValues(gameType, template);
 
 }
 
@@ -209,3 +261,4 @@ generateGrid(GRID_TEMPLATE_YAKAZU[0] , GRID_ELEMENT_YAKAZU, 'yakazu');
 
 const GRID_ELEMENT_TECTONIC = document.getElementById('tectonicGrid');
 generateGrid(GRID_TEMPLATE_TECTONIC[0], GRID_ELEMENT_TECTONIC, 'tectonic');
+
