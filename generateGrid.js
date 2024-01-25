@@ -154,9 +154,6 @@ function drawZones(template, gameType){
 // FUNCTION TO ADD 'min' and 'max' ATTRIBUTES TO THE HTML ELEMENT OF THE CELLS
 function setMinMaxValues(gameType, template){
     
-
-
-}
 // DEFINES MAXIMUM VALUE FOR A CELL DEPENDING ON THE GAME TYPE AND ADDS IT AS AN ATTRIBUTE
 function setMaxPossibleValue(gameType, template){
 
