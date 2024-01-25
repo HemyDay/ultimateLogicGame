@@ -1,3 +1,5 @@
+
+// Event listener for keyboard inputs
 window.addEventListener("keydown", function (event) {
     if (event.defaultPrevented) {
       return; // Do nothing if the event was already processed
@@ -7,15 +9,17 @@ window.addEventListener("keydown", function (event) {
         handleCellValueChange(Number(event.key))
     }
 
+    if (event.key === "Backspace" || event.key === "Delete" || event.key === " "){
+        handleCellValueChange(event.key);
+    }
+
     // Cancel the default action to avoid it being handled twice
     event.preventDefault();
 
 }, true);
 
 
-
-
-// Function that executes when the keyboard input is a number
+// Function that executes when the keyboard input is a number or something that resets the value
 function handleCellValueChange(key){
 
     // Check if there is a cell id stored in selectedCell
@@ -29,6 +33,12 @@ function handleCellValueChange(key){
 
             // Sets the value of the cell to that nb
             cell.setAttribute("value", key);
+            
+            // Update display so it shows the new value
+            updateCellDisplay(cell);
+        } else if (cell.getAttribute("selected") == "true") {
+            // Sets the value of the cell to that nb
+            cell.setAttribute("value", 'null');
             
             // Update display so it shows the new value
             updateCellDisplay(cell);

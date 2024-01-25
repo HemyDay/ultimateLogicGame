@@ -305,7 +305,7 @@ function generateGrid(template, elementHTML, gameType){
         drawZones(template, gameType)
     };
 
-    // Execute the function that determine the min and max possible value for each cell in the gameGrid and adds them as attributes to the element
+    // Execute the function that determine the min and max possible value for each cell in the gameGrid and adds them as attributes to the
     setMaxPossibleValue(gameType, template);
     setMinPossibleValue(gameType)
 
@@ -332,8 +332,18 @@ function leftClickHandler(cell) {
 
 // Function that refreshes the cell innerHTML so it matches its value
 function updateCellDisplay(cell){
-    cell.innerHTML = cell.getAttribute('value');
+    if (cell.getAttribute('value') !== 'null'){
+        cell.innerHTML = cell.getAttribute('value');
+    } else {
+        cell.innerHTML = ' ';
+    }
 }
+
+// if (cell.getAttribute('value') >= cell.getAttribute('min') && cell.getAttribute('value') <= cell.getAttribute('max')){
+//     cell.innerHTML = cell.getAttribute('value');
+// } else {
+//     cell.innerHTML = '';
+// }
 
 //  ---------------------------------------------------------------- EXECUTED CODE  ----------------------------------------------------------------  //
 
