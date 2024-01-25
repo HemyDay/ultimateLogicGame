@@ -151,9 +151,6 @@ function drawZones(template, gameType){
     drawBorderOfZones(gameType);
 }
 
-// FUNCTION TO ADD 'min' and 'max' ATTRIBUTES TO THE HTML ELEMENT OF THE CELLS
-function setMinMaxValues(gameType, template){
-    
 // DEFINES MAXIMUM VALUE FOR A CELL DEPENDING ON THE GAME TYPE AND ADDS IT AS AN ATTRIBUTE
 function setMaxPossibleValue(gameType, template){
 
@@ -271,7 +268,9 @@ function generateGrid(template, elementHTML, gameType){
                 elementHTML.innerHTML += `
                 <div 
                 writeable='false'
+                selected='false'
                 max='0'
+                value = 'null'
                 class='cell ${gameType} block' 
                 id='${i+1}.${j+1}'> 
                 
@@ -280,6 +279,8 @@ function generateGrid(template, elementHTML, gameType){
                 elementHTML.innerHTML += `
                 <div 
                 writeable='false'
+                selected='false'
+                value ='${template.values[i][j]}'
                 class='cell ${gameType}' 
                 id='${i+1}.${j+1}'>
                     ${template.values[i][j]}
@@ -288,6 +289,8 @@ function generateGrid(template, elementHTML, gameType){
                 elementHTML.innerHTML += `
                 <div 
                 writeable='true'
+                selected='false'
+                value = 'null'
                 class='cell ${gameType}' 
                 id='${i+1}.${j+1}'> 
                 
@@ -302,20 +305,50 @@ function generateGrid(template, elementHTML, gameType){
         drawZones(template, gameType)
     };
 
+    // Execute the function that determine the min and max possible value for each cell in the gameGrid and adds them as attributes to the element
     setMaxPossibleValue(gameType, template);
+    setMinPossibleValue(gameType)
 
+    // addEventListener to all cells that execute leftClickHandler() on leftclick
+    let allCells = document.querySelectorAll(`.cell`)
+    allCells.forEach((cell) => cell.addEventListener("click", function (){leftClickHandler(cell);}));
+}
+
+// The variable that will store the id of the currently selected cell
+let selectedCell = null;
+
+
+// On left click, set all cells writeable attribute to false
+// if it is writeable, stores the id of the selected cell in selectedCell
+// sets the selected attribute of the cell to true
+function leftClickHandler(cell) { 
+    document.querySelectorAll(`.cell`).forEach(function (cell) {cell.setAttribute("selected", 'false');});
+    if (cell.getAttribute('writeable') !== 'false') {
+        cell.setAttribute('selected', 'true');
+        selectedCell = cell.getAttribute('id') ;
+    }
+}
+
+
+// Function that refreshes the cell innerHTML so it matches its value
+function updateCellDisplay(cell){
+    cell.innerHTML = cell.getAttribute('value');
 }
 
 //  ---------------------------------------------------------------- EXECUTED CODE  ----------------------------------------------------------------  //
 
 const GRID_ELEMENT_SUDOKU = document.getElementById('sudokuGrid');
 generateGrid(GRID_TEMPLATE_SUDOKU[0], GRID_ELEMENT_SUDOKU, 'sudoku');
+generateGameMenu('sudoku');
 
 const GRID_ELEMENT_BINERO = document.getElementById('bineroGrid');
 generateGrid(GRID_TEMPLATE_BINERO[0] , GRID_ELEMENT_BINERO, 'binero');
-
-const GRID_ELEMENT_YAKAZU = document.getElementById('yakazuGrid');
-generateGrid(GRID_TEMPLATE_YAKAZU[0] , GRID_ELEMENT_YAKAZU, 'yakazu');
+generateGameMenu('binero');
 
 const GRID_ELEMENT_TECTONIC = document.getElementById('tectonicGrid');
 generateGrid(GRID_TEMPLATE_TECTONIC[0], GRID_ELEMENT_TECTONIC, 'tectonic');
+generateGameMenu('tectonic');
+
+const GRID_ELEMENT_YAKAZU = document.getElementById('yakazuGrid');
+generateGrid(GRID_TEMPLATE_YAKAZU[0] , GRID_ELEMENT_YAKAZU, 'yakazu');
+generateGameMenu('yakazu');

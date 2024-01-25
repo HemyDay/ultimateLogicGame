@@ -3,24 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test for checking</title>
+    <title>Ultimate Logic Games Platform</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h3>Sudoku</h3>
-    <div class="gameContainer" id="sudokuGrid"></div>
+    <section class="overallGameContainer sudoku">
+        <div class="gameContainer" id="sudokuGrid"></div>
+        <div class="gameMenu"></div>
+    </section>
     <br />
     <h3>Binero</h3>
-    <div class="gameContainer" id="bineroGrid"> </div>
+    <section class="overallGameContainer binero">
+        <div class="gameContainer" id="bineroGrid"> </div>
+        <div class="gameMenu"></div>
+    </section>
     <br />
     <h3>Tectonic</h3>
-    <div class="gameContainer" id="tectonicGrid"> </div>
+    <section class="overallGameContainer tectonic">
+        <div class="gameContainer" id="tectonicGrid"> </div>
+        <div class="gameMenu"></div>
+    </section>  
     <br />
     <h3>Yakazu</h3>
-    <div class="gameContainer" id="yakazuGrid"> </div>
+    <section class="overallGameContainer yakazu">
+        <div class="gameContainer" id="yakazuGrid"> </div>
+        <div class="gameMenu"></div>
+    </section>
     <br />
     
 </body>
     <script type="text/javascript" src="checkCells.js"></script>
+    <script type="text/javascript" src="gameMenu.js"></script>
+    <script type="text/javascript" src="inputs.js"></script>
     <script type="text/javascript" src="generateGrid.js"></script>
+    
 </html>
