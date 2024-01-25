@@ -36,6 +36,8 @@ function handleCellValueChange(key){
             
             // Update display so it shows the new value
             updateCellDisplay(cell);
+
+        
         } else if (cell.getAttribute("selected") == "true") {
             // Sets the value of the cell to that nb
             cell.setAttribute("value", 'null');
