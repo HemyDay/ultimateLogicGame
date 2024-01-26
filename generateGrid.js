@@ -13,7 +13,7 @@ const GRID_TEMPLATE_SUDOKU = [
     {
     values : [
         [    9 , null ,    4 , null ,    5 , null ,    3 , null ,    6 ] ,
-        [ null ,    3 ,    6 ,    3 , null ,    1 ,    9 ,   7  , null ] ,
+        [ null , null ,    6 , null , null ,    1 ,    9 ,   7  , null ] ,
         [    1 , null , null ,    8 , null,     6 , null , null ,    5 ] ,
         [ null ,    1 , null , null ,    3 , null , null ,    2 , null ] ,
         [ null ,    9 ,    7 ,    2 , null ,    4 ,    6 ,    5 , null ] ,
@@ -269,7 +269,9 @@ function generateGrid(template, elementHTML, gameType){
                 <div 
                 writeable='false'
                 selected='false'
-                max='0'
+                errorCol='false'
+                errorRow='false'
+                errorZone='false'
                 value = 'null'
                 class='cell ${gameType} block' 
                 id='${i+1}.${j+1}'> 
@@ -280,6 +282,9 @@ function generateGrid(template, elementHTML, gameType){
                 <div 
                 writeable='false'
                 selected='false'
+                errorCol='false'
+                errorRow='false'
+                errorZone='false'
                 value ='${template.values[i][j]}'
                 class='cell ${gameType}' 
                 id='${i+1}.${j+1}'>
@@ -290,6 +295,9 @@ function generateGrid(template, elementHTML, gameType){
                 <div 
                 writeable='true'
                 selected='false'
+                errorCol='false'
+                errorRow='false'
+                errorZone='false'
                 value = 'null'
                 class='cell ${gameType}' 
                 id='${i+1}.${j+1}'> 
@@ -337,28 +345,44 @@ function updateCellDisplay(cell){
     } else {
         cell.innerHTML = ' ';
     }
+
+    checkCell(cell);
 }
 
-// if (cell.getAttribute('value') >= cell.getAttribute('min') && cell.getAttribute('value') <= cell.getAttribute('max')){
-//     cell.innerHTML = cell.getAttribute('value');
-// } else {
-//     cell.innerHTML = '';
-// }
-
 //  ---------------------------------------------------------------- EXECUTED CODE  ----------------------------------------------------------------  //
+function gameGeneration(gameChoice){
 
-const GRID_ELEMENT_SUDOKU = document.getElementById('sudokuGrid');
-generateGrid(GRID_TEMPLATE_SUDOKU[0], GRID_ELEMENT_SUDOKU, 'sudoku');
-generateGameMenu('sudoku');
+    switch (gameChoice) {
+        case 'sudoku':
+            const GRID_ELEMENT_SUDOKU = document.getElementById('sudokuGrid');
+            generateGrid(GRID_TEMPLATE_SUDOKU[0], GRID_ELEMENT_SUDOKU, 'sudoku');
+            generateGameMenu('sudoku');
+        break;
 
-const GRID_ELEMENT_BINERO = document.getElementById('bineroGrid');
-generateGrid(GRID_TEMPLATE_BINERO[0] , GRID_ELEMENT_BINERO, 'binero');
-generateGameMenu('binero');
+        case 'binero':
+            const GRID_ELEMENT_BINERO = document.getElementById('bineroGrid');
+            generateGrid(GRID_TEMPLATE_BINERO[0] , GRID_ELEMENT_BINERO, 'binero');
+            generateGameMenu('binero');
+        break;
 
-const GRID_ELEMENT_TECTONIC = document.getElementById('tectonicGrid');
-generateGrid(GRID_TEMPLATE_TECTONIC[0], GRID_ELEMENT_TECTONIC, 'tectonic');
-generateGameMenu('tectonic');
+        case 'tectonic':
+            const GRID_ELEMENT_TECTONIC = document.getElementById('tectonicGrid');
+            generateGrid(GRID_TEMPLATE_TECTONIC[0], GRID_ELEMENT_TECTONIC, 'tectonic');
+            generateGameMenu('tectonic');
+        break;
 
-const GRID_ELEMENT_YAKAZU = document.getElementById('yakazuGrid');
-generateGrid(GRID_TEMPLATE_YAKAZU[0] , GRID_ELEMENT_YAKAZU, 'yakazu');
-generateGameMenu('yakazu');
+        case 'yakazu':   
+            const GRID_ELEMENT_YAKAZU = document.getElementById('yakazuGrid');
+            generateGrid(GRID_TEMPLATE_YAKAZU[0] , GRID_ELEMENT_YAKAZU, 'yakazu');
+            generateGameMenu('yakazu');
+        break;
+    
+        default:
+            break;
+    }
+    
+
+    
+
+   
+}

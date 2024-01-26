@@ -25,6 +25,10 @@
     background-color: lightblue;
 }
 
+.cell[errorCol='true'] , .cell[errorRow='true'],.cell[errorZone='true']{
+    background-color: lightcoral;
+}
+
 
 .gameContainer {
     border: solid 1px black;
@@ -49,12 +53,8 @@ h3 , .gameContainer {
 
     display: grid;
     grid-template-columns: auto auto;
-    gap: 20px;
+    gap: 40px;
 
-}
-
-.overallGameContainer > * {
-    border: solid 1px gray;
 }
 
 .nbMenu{

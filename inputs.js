@@ -1,4 +1,3 @@
-
 // Event listener for keyboard inputs
 window.addEventListener("keydown", function (event) {
     if (event.defaultPrevented) {
@@ -32,12 +31,18 @@ function handleCellValueChange(key){
         if (cell.getAttribute("selected") == "true" && key >= cell.getAttribute("min") && key <= cell.getAttribute("max")){
 
             // Sets the value of the cell to that nb
-            cell.setAttribute("value", key);
+            if (Number(cell.getAttribute('value')) !== key){
+                // If the key value is different from the current value of the cell, sets the value of the cell to key
+                cell.setAttribute("value", key);
+            } else if (Number(cell.getAttribute('value')) == key) {
+                // If the key value is the same as the current value of the cell, sets the value of the cell to null
+                cell.setAttribute("value", null);
+            };
             
             // Update display so it shows the new value
             updateCellDisplay(cell);
 
-        
+        // If the input is one supposed to delete the cell (backspace, spacebar or delete)
         } else if (cell.getAttribute("selected") == "true") {
             // Sets the value of the cell to that nb
             cell.setAttribute("value", 'null');

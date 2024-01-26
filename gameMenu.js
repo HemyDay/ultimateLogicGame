@@ -17,11 +17,16 @@ function generateNbButtons(gameType, menu, min, max){
         for (let i = min; i < max+1; i++) {
             // Generate button html
             nbMenu.innerHTML += `<div class='nbButton' value='${i}'>${i}</div>`
-
-            // adds an event listener that simulates a keyboard input
-            let button = document.querySelector(`.nbButton[value='${i}']`);
-            button.addEventListener("click", function (){handleCellValueChange(Number(i))});
         }
+
+        
+    // adds an event listener to all buttons that simulates a keyboard input
+    let buttons = document.querySelectorAll(`.nbButton`);
+    buttons.forEach(function (button) {
+        let val = Number(button.getAttribute('value'))
+        button.addEventListener("click", function (){handleCellValueChange(val)});
+    });
+    
 }
 
 // Find the biggest max attribute amongst the propreties of all the cells of the game grid
@@ -47,3 +52,4 @@ function findGridMin(gameType){
     });
     return minFoundValue;
 }
+
