@@ -25,7 +25,7 @@
     background-color: lightblue;
 }
 
-.cell[errorCol='true'] , .cell[errorRow='true'],.cell[errorZone='true']{
+.cell[errorCol='true'] , .cell[errorRow='true'],.cell[errorZone='true'],.cell[errorZoneTwo='true']{
     background-color: lightcoral;
 }
 
