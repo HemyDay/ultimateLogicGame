@@ -9,53 +9,60 @@
 // BINERO
     // 3 OF SAME IN A ROW       | ROW ________________________ THREE CELLS      | ERROR         DONE
     // 3 OF SAME IN A ROW       | COL ________________________ THREE CELLS      | ERROR         DONE
-    // MAXED NUMBER             | ROW ________________________ ALL DUPLICATES   | ERROR         
-    // MAXED NUMBER             | COL ________________________ ALL DUPLICATES   | ERROR
-    // IDENTICAL                | OTHER ROW __________________ BOTH ROW         | ERROR
-    // IDENTICAL                | OTHER COL __________________ BOTH COL         | ERROR
+    // MAXED NUMBER             | ROW ________________________ ALL DUPLICATES   | ERROR         DONE
+    // MAXED NUMBER             | COL ________________________ ALL DUPLICATES   | ERROR         DONE
+    // IDENTICAL                | OTHER ROW __________________ BOTH ROW         | ERROR         DONE
+    // IDENTICAL                | OTHER COL __________________ BOTH COL         | ERROR         DONE
 
 // TECTONIC
     // DOUBLE                   | 8 AROUND ___________________ ALL DUPLICATES   | ERROR
-    // DOUBLE                   | ZONE _______________________ ALL DUPLICATES   | ERROR
+    // DOUBLE                   | ZONE _______________________ ALL DUPLICATES   | ERROR         DONE
     // SAME VALUE               | ALL GRID ___________________ ALL DUPLICATES   | HIGHLIGHT
 
 // YA'KAZU
-    // DOUBLE                   | ROW ________________________ BOTH CELLS       | ERROR         DONE
-    // DOUBLE                   | COL ________________________ BOTH CELLS       | ERROR         DONE
+    // DOUBLE                   | ROW ________________________ BOTH CELLS       | ERROR         
+    // DOUBLE                   | COL ________________________ BOTH CELLS       | ERROR         
     // ISN'T POSSIBLE (LENGTH)  | ROW ________________________ CHECKED CELL     | ERROR         (impossible to input in the first place)
     // ISN'T POSSIBLE (LENGTH)  | COL ________________________ CHECKED CELL     | ERROR         (impossible to input in the first place)
 
 
-    
+// Function that executes when the user changes the value of a cell
+    // cell : the HTML element of the cell that has been changed   
 function checkCell(cell){
+
+    // Gets the game type from the class of the cell
     let gameType = cell.className.split(' ')[1];
+    
+    // Gets the cell ID and splits it as thus : [0] = row, [1] = column and [2] = zone (if it exists)
     let cellID = cell.getAttribute("id").split(".");
-    let rowMatch = undefined;
-    let colMatch = undefined;
-    let zoneMatch = undefined;
+
+    // Finds the cells that are in the same row, col and zone (if it exists)
+    let rowMatch = findMatchingSection(cellID[0], gameType, 0);
+    let colMatch = findMatchingSection(cellID[1], gameType, 1);
+    let zoneMatch = findMatchingSection(cellID[2], gameType, 2) || undefined;
 
     switch (gameType) {
         case 'sudoku':
-            rowMatch = findMatchingSection(cellID[0], gameType, 0);
             findDuplicateWithinSelection(rowMatch, 'errorRow');
-
-            colMatch = findMatchingSection(cellID[1], gameType, 1);
             findDuplicateWithinSelection(colMatch, 'errorCol');
+            findDuplicateWithinSelection(zoneMatch, 'errorZone');
+        break;
 
-            zoneMatch = findMatchingSection(cellID[2], gameType, 2);
-            findDuplicateWithinSelection(zoneMatch, 'errorZone');
-        break;
         case 'tectonic':
-            zoneMatch = findMatchingSection(cellID[2], gameType, 2);
             findDuplicateWithinSelection(zoneMatch, 'errorZone');
         break;
+
         case 'binero':
-            rowMatch = findMatchingSection(cellID[0], gameType, 0);
             findMultipleInARowWithinSelection(rowMatch, 'errorRow');
-            colMatch = findMatchingSection(cellID[1], gameType, 1);
             findMultipleInARowWithinSelection(colMatch, 'errorCol');
             checkIdenticalRowOrCol(0, 'errorZone' , gameType);
             checkIdenticalRowOrCol(1, 'errorZoneTwo' , gameType);
+            findOverMaxPossibleNumberWihinSelection(rowMatch, 'errorMaxCol', (rowMatch.length/2));
+            findOverMaxPossibleNumberWihinSelection(colMatch, 'errorMaxRow', (colMatch.length/2));
+            
+        break;
+
+        case 'yakazu':
             
         break;
     
@@ -69,6 +76,9 @@ function checkCell(cell){
 
 
 // Returns an array with the cell elements of the same row, column or zone
+    // targetSection : index of the row or col we want to check
+    // gameType : game type as a string
+    // index : 0 for rows, 1 for cols and 2 for zones
 function findMatchingSection(targetSection, gameType, index){
     let foundMatches = []
     let allCells = document.querySelectorAll(`.cell.${gameType}`);
@@ -80,6 +90,58 @@ function findMatchingSection(targetSection, gameType, index){
     });
 
     return foundMatches;
+}
+
+function findOverMaxPossibleNumberWihinSelection(section, errorType, max){
+    // stores the value of each cell in selectionValues
+    let sectionValues = section.map((x) => x.getAttribute('value'));
+    
+    // count will store the nb of occurences of each values
+    const count = {};
+
+    // calculate the number of occurences of each value
+    for (const element of sectionValues) {
+    if (count[element]) {
+        count[element] += 1;
+    } else {
+        count[element] = 1;
+    }
+    }
+
+    // If the nb of cells with value '0' is bigger than max
+    if (count['0'] > max){
+        // for each cell in the selection
+        section.forEach(function (cell) {
+            // if its value is 0, set errorType to true
+            if (cell.getAttribute('value') == '0'){
+                cell.setAttribute(errorType, 'true');
+            
+            // if its value is null, set errorType to false
+            } else if (cell.getAttribute('value') == 'null'){
+                cell.setAttribute(errorType, 'false');
+            }
+        });
+
+    // If the nb of cells with value '1' is bigger than max    
+    } else if (count['1'] > max){
+        section.forEach(function (cell) {
+            // if its value is 1, set errorType to true
+            if (cell.getAttribute('value') == '1'){
+                cell.setAttribute(errorType, 'true');
+
+            // if its value is null, set errorType to false
+            } else if (cell.getAttribute('value') == 'null'){
+                cell.setAttribute(errorType, 'false');
+            }
+        });
+
+    // if there are no cells with a value that appears more than max, set errorType to false for all cells
+    } else {
+        section.forEach(function (cell) {
+                cell.setAttribute(errorType, 'false');
+        });
+    }
+    
 }
 
 // Function to finde duplicate within set section (col, row, zone or zoneTwo)
@@ -109,6 +171,8 @@ function findDuplicateWithinSelection(section, errorType){
 }
 
 // Function to check if there are 3 or more of the same value in a row
+    // section : an array with the cells that we want to check
+    // errorType : 'errorRow', 'errorCol', 'errorZone' or 'errorZoneTwo'
 function findMultipleInARowWithinSelection(section, errorType){
     for (let i = 0; i < (section.length); i++) {
 
@@ -151,6 +215,10 @@ function findMultipleInARowWithinSelection(section, errorType){
     }
 }
 
+// Function to check if two rows or cols are identical and sets errorZoneTwo to true for all the cells in the duplicate row/col
+    // zone = 0 for rows and 1 for cols
+    // errorType = 'errorZone' for rows and 'errorZoneTwo' for cols
+    // gameType = game type as a string
 function checkIdenticalRowOrCol(zone, errorType, gameType){
     // Stores all cells elements in allCells
     let allCells = document.querySelectorAll(`.cell.${gameType}`);
@@ -166,7 +234,7 @@ function checkIdenticalRowOrCol(zone, errorType, gameType){
     for (let r = 0; r < nbOfZones; r++) {
         let Zone = findMatchingSection((r+1).toString(), gameType, zone)
         allZones.push(Zone);  
-        
+
         allZonesValues.push(Zone.map((x) => x.getAttribute('value')).join(''));
     }
 
@@ -210,61 +278,3 @@ function checkIdenticalRowOrCol(zone, errorType, gameType){
 
 }
 
-// function checkIdenticalRowOrCol(zone, errorType, gameType){
-//     // Stores all cells elements in allCells
-//     let allCells = document.querySelectorAll(`.cell.${gameType}`);
-
-//     // Gets the last cell and split its id to determin the max nb of rows and cols
-//     let lastCell = allCells[allCells.length - 1];
-//     let nbOfRows = Number(lastCell.getAttribute("id").split(".")[0]);
-
-    
-//     let allRows = [];
-//     let allRowsValues = [];
-//     // Get all rows cell elements and stores them in allRows
-//     // Stores the values of all rows cells at the same index as allRows as a string
-//     for (let r = 0; r < nbOfRows; r++) {
-//         let row = findMatchingSection((r+1).toString(), gameType, 0)
-//         allRows.push(row);  
-//         allRowsValues.push(row.map((x) => x.getAttribute('value')).join(''));
-//     }
-
-//     // Compares all the rows and returns matches
-//     for (let rv = 0; rv < allRows.length; rv++) {
-
-//         // Sets the nb of duplicate as 0
-//         let duplicate = 0;
-        
-//         // If there are no null as values for this row 
-//         if (allRowsValues[rv].indexOf('null') === -1) {
-
-//             // Check every row to see if there is a match
-//             allRowsValues.forEach(function (row) {
-
-//                 // If there is a match, adds 1 to duplicate
-//                 if (row === allRowsValues[rv]){
-//                     duplicate++;
-//                 }        
-//             });
-//         }
-
-//         // if there are more than one duplicate (counting itself), sets the errorZone of all the cells in the row as true
-//         if (duplicate > 1) {
-//             console.log(`FOUND DUPLICATE : ${rv} -> ${allRowsValues[rv]}`)
-//             allRows[rv].forEach(function (cell) {
-//                 cell.setAttribute('errorZone', 'true');
-//             });
-        
-//         // If no match has been found, sets the errorZone of all the cells in the row as false
-//         } else {
-//             allRows[rv].forEach(function (cell) {
-//                 cell.setAttribute('errorZone', 'false');
-//             });
-//         }
-        
-//     }
-
-
-
-
-// }

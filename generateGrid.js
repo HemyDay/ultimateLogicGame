@@ -273,6 +273,8 @@ function generateGrid(template, elementHTML, gameType){
                 errorRow='false'
                 errorZone='false'
                 errorZoneTwo='false'
+                errorMaxCol = 'false'
+                errorMaxRow = 'false'
                 value = 'null'
                 class='cell ${gameType} block' 
                 id='${i+1}.${j+1}'> 
@@ -287,6 +289,8 @@ function generateGrid(template, elementHTML, gameType){
                 errorRow='false'
                 errorZone='false'
                 errorZoneTwo='false'
+                errorMaxCol = 'false'
+                errorMaxRow = 'false'
                 value ='${template.values[i][j]}'
                 class='cell ${gameType}' 
                 id='${i+1}.${j+1}'>
@@ -301,6 +305,8 @@ function generateGrid(template, elementHTML, gameType){
                 errorRow='false'
                 errorZone='false'
                 errorZoneTwo='false'
+                errorMaxCol = 'false'
+                errorMaxRow = 'false'
                 value = 'null'
                 class='cell ${gameType}' 
                 id='${i+1}.${j+1}'> 
