@@ -275,7 +275,7 @@ function generateGrid(template, elementHTML, gameType){
                 errorZoneTwo='false'
                 errorMaxCol = 'false'
                 errorMaxRow = 'false'
-                value = 'null'
+                value = 'bk'
                 class='cell ${gameType} block' 
                 id='${i+1}.${j+1}'> 
                 

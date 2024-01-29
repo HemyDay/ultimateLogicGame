@@ -63,7 +63,8 @@ function checkCell(cell){
         break;
 
         case 'yakazu':
-            
+            findDuplicateWithinSelection(RowOrColForYakazu(rowMatch, cellID, 0, 1, gameType), 'errorRow');
+            findDuplicateWithinSelection(RowOrColForYakazu(colMatch, cellID, 1, 0, gameType), 'errorCol');
         break;
     
         default:
@@ -72,6 +73,90 @@ function checkCell(cell){
     if (gameType === 'sudoku'){
         
     }
+}
+
+function RowOrColForYakazu(sectionMatch, cellID, index, otherIndex, gameType){
+
+    // Store the section as a table where 0 = block and 1 = writable cell
+    let thisSectionCut = sectionMatch.map(function (cell) { if (cell.getAttribute('value') == 'bk') { return 0 } else { return 1 }});
+    // console.log(`thisSectionCut : ${thisSectionCut}`);
+    // console.log(`The row number of this cell is ${cellID[index]}`)
+
+    // Store the index of the cell in the section
+    let cellIDForSection = Number(cellID[otherIndex] - 1);
+    // console.log(`The index on the row is: ${cellIDForSection}`);
+    
+    // Stores the index of the start of the section for the given cell
+    let sectionStart = cellIDForSection;
+    // console.log(`So, we start to count at ${sectionStart}`);
+
+    // Starting at the index of the cell, check if the previous cell is a block or if it is the end of the grid
+    for (let i = (cellIDForSection); i > 0; i--) {
+
+        // console.log(`We are looking at the cell at row ${cellID[index]} and col at index ${i}`);
+
+        // Each time it passes the test, adds +1 to section end, indicating the furthest it can go in the index without encountering a block or end of the grid
+        if (thisSectionCut[i-1] !== 0 && thisSectionCut[i-1] !== undefined) {
+            // console.log(`At index ${i-1} we don't have a block or end of the grid`);
+            sectionStart--;
+
+         // If a block or end of grid is found, breaks the loop by setting i to the begining of the grid 
+        } else {
+            // console.log(`At index ${i-1} we reached a block or end of the grid`);
+            i = 0;
+        }
+    }
+
+    // Stores the index of the start of the section for the given cell
+    let sectionEnd = cellIDForSection;
+    // console.log(`So, we start to count at ${sectionEnd}`);
+    
+    // console.log(`SectionEnd : ${sectionEnd}`);
+
+    // Starting at the index of the cell, check if the previous cell is a block or if it is the end of the grid
+    for (let i = cellIDForSection; i < thisSectionCut.length; i++) {
+
+        // console.log(`We are looking at the cell at row ${cellID[index]} and col at index ${i}`);
+
+        // Each time it passes the test, adds +1 to section end, indicating the furthest it can go in the index without encountering a block or end of the grid
+        if (thisSectionCut[i+1] !== 0 && thisSectionCut[i+1] !== undefined) {
+            // console.log(`At index ${i+1} we don't have a block or end of the grid`);
+            sectionEnd++;
+
+         // If a block or end of grid is found, breaks the loop by setting i to the begining of the grid 
+        } else {
+            // console.log(`At index ${i+1} we reached a block or end of the grid`);
+            i = thisSectionCut.length;
+        }
+    }
+    
+    // console.log(`SectionEnd : ${sectionEnd}`);
+
+    // To translate the index found to the way we labeled our cells with id (starts at 1 instead of 0), we add one to the numbers found
+    let min = sectionStart + 1 ;
+    let max = sectionEnd + 1;
+
+
+    // foundMatches will store the cell elements that meet the requirements
+    let foundMatches = []
+
+    // Store all cells of the grid in allCells
+    let allCells = document.querySelectorAll(`.cell.${gameType}`);
+
+    // For each cell
+    allCells.forEach(function (cell) {
+        if (cell.getAttribute("id").split(".")[index] === cellID[index]         // if it has the same row / col the cell we are checking
+        && cell.getAttribute("id").split(".")[otherIndex] >= min                // if its col / row is above the minimum
+        && cell.getAttribute("id").split(".")[otherIndex] <= max){              // if its col / row is below the maximum
+            // push the cell elemetn to FoundMatches
+            foundMatches.push(cell);
+        }
+    });
+
+    // Returns the cells that meet the requirements (are in the same zone)
+    return foundMatches;
+
+
 }
 
 
@@ -92,6 +177,10 @@ function findMatchingSection(targetSection, gameType, index){
     return foundMatches;
 }
 
+// Function to check if there are more cells with a certain value than what is possible 
+    // section : an array with the cells that we want to check
+    // errorType : 'errorMaxCol' for columns and 'errorMaxRow' for rows
+    // max : the max number of times a value can be found within the section
 function findOverMaxPossibleNumberWihinSelection(section, errorType, max){
     // stores the value of each cell in selectionValues
     let sectionValues = section.map((x) => x.getAttribute('value'));
@@ -144,7 +233,9 @@ function findOverMaxPossibleNumberWihinSelection(section, errorType, max){
     
 }
 
-// Function to finde duplicate within set section (col, row, zone or zoneTwo)
+// Function to find duplicate within set section (col, row, zone or zoneTwo)
+    // section : an array with the cells that we want to check
+    // errorType : the error type we want to change
 function findDuplicateWithinSelection(section, errorType){
 
 

@@ -25,4 +25,4 @@ function generateGame(gameName) {
 
 
 generateAppMenu()
-generateGame('binero');
+generateGame('yakazu');
