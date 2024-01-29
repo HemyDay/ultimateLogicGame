@@ -1,14 +1,19 @@
 
-// AN ARRY OF COLOR TO USE TO DIFERENCIATE STUFF
-const COLORS = ['aliceblue','chartreuse', 'chocolate', 'coral', 'cornflowerblue', 'cornsilk', 'crimson', 'cyan', 'darkblue', 'darkcyan', 'darkgoldenrod', 'darkgray', 'darkgrey', 'darkgreen', 'darkkhaki', 'darkmagenta', 'darkolivegreen', 'darkorange', 'darkorchid', 'darkred', 'darksalmon', 'darkseagreen', 'darkslateblue', 'darkslategray', 'darkslategrey', 'darkturquoise', 'darkviolet', 'deeppink', 'deepskyblue', 'dimgray', 'dimgrey', 'dodgerblue', 'firebrick', 'floralwhite', 'forestgreen', 'fuchsia', 'gainsboro', 'ghostwhite', 'gold', 'goldenrod', 'gray', 'grey', 'green', 'greenyellow', 'honeydew', 'hotpink', 'indianred', 'indigo', 'ivory', 'khaki', 'lavender', 'lavenderblush', 'lawngreen', 'lemonchiffon', 'lightblue', 'lightcoral', 'lightcyan', 'lightgoldenrodyellow', 'lightgray', 'lightgrey', 'lightgreen', 'lightpink', 'lightsalmon', 'lightseagreen', 'lightskyblue', 'lightslategray', 'lightslategrey', 'lightsteelblue', 'lightyellow', 'lime', 'limegreen', 'linen', 'magenta', 'maroon', 'mediumaquamarine', 'mediumblue', 'mediumorchid'];
-
-// CSS properties for border of zones
+/**
+ * @description                 - CSS propreties for border of zones 
+ * @constant
+ * @type {String} 
+ */
 const ACCENT_BORDER_STYLE = '1px solid black'
 
 
 //  ---------------------------------------------------------------- GAME TEMPLATES  ----------------------------------------------------------------  //
 
-// STORED TEMPLATE FOR A SUDOKU GRID
+/** 
+ * @description                 - Template for a sudoku grid 
+ * @constant
+ * @type {{values: Array<number|null>, zones: Array<string>}}
+ */
 const GRID_TEMPLATE_SUDOKU = [ 
     {
     values : [
@@ -37,7 +42,12 @@ const GRID_TEMPLATE_SUDOKU = [
     }
 ]
 
-// STORED TEMPLATE FOR A BINERO GRID
+
+/** 
+ * @description                 - Template for a binero grid 
+ * @constant
+ * @type {{values: Array<number|null>, zones: Array<string>}}
+ */
 const GRID_TEMPLATE_BINERO = [
     {
     values : [
@@ -55,7 +65,11 @@ const GRID_TEMPLATE_BINERO = [
     }    
 ]
 
-// STORED TEMPLATE FOR A TECTONIC GRID
+/** 
+ * @description                 - Template for a tectonic grid 
+ * @constant
+ * @type {{values: Array<number|null>, zones: Array<string>}}
+ */
 const GRID_TEMPLATE_TECTONIC = [ 
     {
     values : [
@@ -81,7 +95,11 @@ const GRID_TEMPLATE_TECTONIC = [
     }
 ]
 
-// STORED TEMPLATE FOR A YAKAZU GRID
+/** 
+ * @description                 - Template for a yakazu grid 
+ * @constant
+ * @type {{values: Array<number|null>, zones: Array<string>}}
+ */
 const GRID_TEMPLATE_YAKAZU = [ 
     {
     values : [
@@ -102,9 +120,13 @@ const GRID_TEMPLATE_YAKAZU = [
 
 //  ---------------------------------------------------------------- FUNCTIONS DECLARATIONS  ----------------------------------------------------------------  //
 
-
+/**
+ * @function                     drawBorderOfZones(gameType)   
+ * @description                 - For each zone in the game, and for each cells in that zone, draws borders between cells that are in different zones
+ * @param {String} gameType     - The name of the game
+ */
 function drawBorderOfZones(gameType){
-    let allCells = document.querySelectorAll(`.cell.${gameType}`)
+    let allCells = document.querySelectorAll(`.cell.${gameType}`)       // stores all the game cells in allCells as an array of objects
 
     allCells.forEach(function (cell) {
         let cellID = cell.getAttribute("id").split(".");
@@ -129,6 +151,11 @@ function drawBorderOfZones(gameType){
     });
 }
 
+/**
+ * @description                 - For each cell in a zone, adds the id of the zone to its 'id' attribute
+ * @param {Object} template     - An object with the grid values and zones
+ * @param {String} gameType     - The name of the game
+ */
 function drawZones(template, gameType){
     // Pour chaque index dans le .zone (le nombre de zones)
     for (let z = 0; z < template.zones.length; z++) {
@@ -139,9 +166,6 @@ function drawZones(template, gameType){
             // récupère l'élément correspondant à l'id dans l'array zone
             cell = document.querySelector(`.${gameType}[id="${template.zones[z][o]}"]`)
 
-            // lui donne une couleur en fonction de sa zone
-            // cell.style.backgroundColor = COLORS[z];
-
             // change son id en ajoutant son numéro de zone
             cell.setAttribute('id', `${cell.getAttribute('id')}.${z+1}`)
         }
@@ -151,7 +175,11 @@ function drawZones(template, gameType){
     drawBorderOfZones(gameType);
 }
 
-// DEFINES MAXIMUM VALUE FOR A CELL DEPENDING ON THE GAME TYPE AND ADDS IT AS AN ATTRIBUTE
+/**
+ * @description                 - Defines the maximum value for each cell depending on the gameType and template and adds it as an attribute to the HTML element as 'max'='x' 
+ * @param {String} gameType     - The name of the game
+ * @param {Object} template     - An object with the grid values and zones
+ */
 function setMaxPossibleValue(gameType, template){
 
         let allCells = document.querySelectorAll(`.cell.${gameType}`);
@@ -238,7 +266,10 @@ function setMaxPossibleValue(gameType, template){
         };
 }
 
-// DEFINES MINIMUM VALUE FOR A CELL DEPENTING ON THE GAME TYPE AND ADDS IT AS AN ATTRIBUTE
+/**
+ * @description                 - Defines the minimum value for each cell depending on the gameType and adds it as an attribute to the HTML element as 'min'='x' 
+ * @param {String} gameType     - The name of the game
+ */
 function setMinPossibleValue(gameType){
 
     let allCells = document.querySelectorAll(`.cell.${gameType}`);
@@ -253,7 +284,13 @@ function setMinPossibleValue(gameType){
 
 }
 
-// GENERAL FUNCTION THAT GENERATES A GRID
+
+/**
+ * @description                 - Draws a grid using the data from the object template and adds attributes to each cells depending on the gameType              
+ * @param {Object} template     - An object with the grid values and zones
+ * @param {Object} elementHTML  - The HTML element in which the grid will be generated
+ * @param {String} gameType     - The name of the game 
+ */
 function generateGrid(template, elementHTML, gameType){
     // SET GRID ENVIRONEMENT
     elementHTML.style.display = "grid";
@@ -331,23 +368,36 @@ function generateGrid(template, elementHTML, gameType){
     allCells.forEach((cell) => cell.addEventListener("click", function (){leftClickHandler(cell);}));
 }
 
-// The variable that will store the id of the currently selected cell
+// 
+/**
+ * @description                 - The variable that will store the id of the currently selected cell
+ * @type {String}               - <row_id>.<column_id>.<zone_id>    
+ * @default [null]
+ */
 let selectedCell = null;
 
 
-// On left click, set all cells writeable attribute to false
-// if it is writeable, stores the id of the selected cell in selectedCell
-// sets the selected attribute of the cell to true
+
+/**
+ * @description                 - Function that executes when the user clicks on a cell and sets selectedCell value to its 'id' attribute 
+ * @param {Object} cell         - a cell as an HTML element
+ */
 function leftClickHandler(cell) { 
     document.querySelectorAll(`.cell`).forEach(function (cell) {cell.setAttribute("selected", 'false');});
     if (cell.getAttribute('writeable') !== 'false') {
         cell.setAttribute('selected', 'true');
         selectedCell = cell.getAttribute('id') ;
     }
+    // On left click, set all cells writeable attribute to false
+    // if it is writeable, stores the id of the selected cell in selectedCell
+    // sets the selected attribute of the cell to true
 }
 
 
-// Function that refreshes the cell innerHTML so it matches its value
+/**
+ * @description                 - Updates innerHTML of the element so it matches its 'value' attribute if it isn't null
+ * @param {Object} cell         - a cell as an HTML element 
+ */
 function updateCellDisplay(cell){
     if (cell.getAttribute('value') !== 'null'){
         cell.innerHTML = cell.getAttribute('value');
@@ -359,9 +409,14 @@ function updateCellDisplay(cell){
 }
 
 //  ---------------------------------------------------------------- EXECUTED CODE  ----------------------------------------------------------------  //
-function gameGeneration(gameChoice){
 
-    switch (gameChoice) {
+/**
+ * @description                 - Generates grid and menu of the given game
+ * @param {String} gameType     - The name of the game 
+ */
+function gameGeneration(gameType){
+
+    switch (gameType) {
         case 'sudoku':
             const GRID_ELEMENT_SUDOKU = document.getElementById('sudokuGrid');
             generateGrid(GRID_TEMPLATE_SUDOKU[0], GRID_ELEMENT_SUDOKU, 'sudoku');
@@ -395,3 +450,4 @@ function gameGeneration(gameChoice){
 
    
 }
+

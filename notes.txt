@@ -23,3 +23,29 @@ ________________________________________________________________________________
 
 ________________________________________________________________________________________________________
 
+//                  WHAT TO CHECK                 //        //          THE EFFECT        //  //   STATUS   //
+
+// SUDOKU
+    // DOUBLE                   | ROW ________________________ BOTH CELLS       | ERROR             DONE
+    // DOUBLE                   | COL ________________________ BOTH CELLS       | ERROR             DONE
+    // DOUBLE                   | ZONE _______________________ BOTH CELLS       | ERROR             DONE
+    // SAME VALUE               | ALL GRID ___________________ ALL DUPLICATES   | HIGHLIGHT
+
+// BINERO
+    // 3 OF SAME IN A ROW       | ROW ________________________ THREE CELLS      | ERROR             DONE
+    // 3 OF SAME IN A ROW       | COL ________________________ THREE CELLS      | ERROR             DONE
+    // MAXED NUMBER             | ROW ________________________ ALL DUPLICATES   | ERROR             DONE
+    // MAXED NUMBER             | COL ________________________ ALL DUPLICATES   | ERROR             DONE
+    // IDENTICAL                | OTHER ROW __________________ BOTH ROW         | ERROR             DONE
+    // IDENTICAL                | OTHER COL __________________ BOTH COL         | ERROR             DONE
+
+// TECTONIC
+    // DOUBLE                   | 8 AROUND ___________________ ALL DUPLICATES   | ERROR
+    // DOUBLE                   | ZONE _______________________ ALL DUPLICATES   | ERROR             DONE
+    // SAME VALUE               | ALL GRID ___________________ ALL DUPLICATES   | HIGHLIGHT
+
+// YA'KAZU
+    // DOUBLE                   | ROW ________________________ BOTH CELLS       | ERROR             DONE
+    // DOUBLE                   | COL ________________________ BOTH CELLS       | ERROR             DONE
+    // ISN'T POSSIBLE (LENGTH)  | ROW ________________________ CHECKED CELL     | ERROR             (impossible to input in the first place)
+    // ISN'T POSSIBLE (LENGTH)  | COL ________________________ CHECKED CELL     | ERROR             (impossible to input in the first place)

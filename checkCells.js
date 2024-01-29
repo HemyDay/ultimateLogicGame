@@ -1,33 +1,7 @@
-//                  WHAT TO CHECK                 //      //          THE EFFECT          //
-
-// SUDOKU
-    // DOUBLE                   | ROW ________________________ BOTH CELLS       | ERROR         DONE
-    // DOUBLE                   | COL ________________________ BOTH CELLS       | ERROR         DONE
-    // DOUBLE                   | ZONE _______________________ BOTH CELLS       | ERROR         DONE
-    // SAME VALUE               | ALL GRID ___________________ ALL DUPLICATES   | HIGHLIGHT
-
-// BINERO
-    // 3 OF SAME IN A ROW       | ROW ________________________ THREE CELLS      | ERROR         DONE
-    // 3 OF SAME IN A ROW       | COL ________________________ THREE CELLS      | ERROR         DONE
-    // MAXED NUMBER             | ROW ________________________ ALL DUPLICATES   | ERROR         DONE
-    // MAXED NUMBER             | COL ________________________ ALL DUPLICATES   | ERROR         DONE
-    // IDENTICAL                | OTHER ROW __________________ BOTH ROW         | ERROR         DONE
-    // IDENTICAL                | OTHER COL __________________ BOTH COL         | ERROR         DONE
-
-// TECTONIC
-    // DOUBLE                   | 8 AROUND ___________________ ALL DUPLICATES   | ERROR
-    // DOUBLE                   | ZONE _______________________ ALL DUPLICATES   | ERROR         DONE
-    // SAME VALUE               | ALL GRID ___________________ ALL DUPLICATES   | HIGHLIGHT
-
-// YA'KAZU
-    // DOUBLE                   | ROW ________________________ BOTH CELLS       | ERROR         
-    // DOUBLE                   | COL ________________________ BOTH CELLS       | ERROR         
-    // ISN'T POSSIBLE (LENGTH)  | ROW ________________________ CHECKED CELL     | ERROR         (impossible to input in the first place)
-    // ISN'T POSSIBLE (LENGTH)  | COL ________________________ CHECKED CELL     | ERROR         (impossible to input in the first place)
-
-
-// Function that executes when the user changes the value of a cell
-    // cell : the HTML element of the cell that has been changed   
+/**
+ * @description                 - When the user changes the value of a cell, executes all the functions that check for errors depending on the gameType
+ * @param {Object} cell         - a cell as an HTML element (The cell that has been changed)
+ */ 
 function checkCell(cell){
 
     // Gets the game type from the class of the cell
@@ -75,8 +49,18 @@ function checkCell(cell){
     }
 }
 
+/**
+ * @description                 - Finds the cells that are in the same row or column as the selected cell 
+ *                                and in the same zone (befores it reaches a block or end of the grid)
+ * @param {Array} sectionMatch  - Either an array of ID of the columns or of the rows
+ * @param {Array} cellID        - The ID of the cell as '<row_id>.<column_id>'
+ * @param {number} index        - Depending on which we are checking, 0 for columns || 1 for rows
+ * @param {number} otherIndex   - 0 for columns || 1 for rows (opposite of index)
+ * @param {String} gameType     - The name of the game 
+ * @returns {Array<Object>}     - An array with the HTML elements of the cells that match the requirements
+ */
 function RowOrColForYakazu(sectionMatch, cellID, index, otherIndex, gameType){
-
+    console.log(cellID)
     // Store the section as a table where 0 = block and 1 = writable cell
     let thisSectionCut = sectionMatch.map(function (cell) { if (cell.getAttribute('value') == 'bk') { return 0 } else { return 1 }});
     // console.log(`thisSectionCut : ${thisSectionCut}`);
@@ -160,10 +144,13 @@ function RowOrColForYakazu(sectionMatch, cellID, index, otherIndex, gameType){
 }
 
 
-// Returns an array with the cell elements of the same row, column or zone
-    // targetSection : index of the row or col we want to check
-    // gameType : game type as a string
-    // index : 0 for rows, 1 for cols and 2 for zones
+/**
+ * @description                  - Finds the cells that are in the same row, column or zone
+ * @param {string} targetSection - 'cellID[0]' for row, 'cellID[1]' for column or 'cellID[2]' the zone
+ * @param {string} gameType      - The name of the game  
+ * @param {number} index         - Depending on which we are checking, 0 for column || 1 for row || 2 for zone (matches targetSection)
+ * @returns {Array<Object>}      - An array with the HTML elements of the cells that match the requirements
+ */
 function findMatchingSection(targetSection, gameType, index){
     let foundMatches = []
     let allCells = document.querySelectorAll(`.cell.${gameType}`);
@@ -177,10 +164,14 @@ function findMatchingSection(targetSection, gameType, index){
     return foundMatches;
 }
 
-// Function to check if there are more cells with a certain value than what is possible 
-    // section : an array with the cells that we want to check
-    // errorType : 'errorMaxCol' for columns and 'errorMaxRow' for rows
-    // max : the max number of times a value can be found within the section
+
+/**
+ * @description                 - Check if the max number of occurences of the same value has been reach within the section 
+ *                                and sets the errorType attribute to true or false depending on the results
+ * @param {Array} section       - An array with the HTML elements of the cells we want to check 
+ * @param {String} errorType    - 'errorMaxCol' for columns and 'errorMaxRow' for rows 
+ * @param {number} max          - the maximum number of times a value can be found within the section
+ */
 function findOverMaxPossibleNumberWihinSelection(section, errorType, max){
     // stores the value of each cell in selectionValues
     let sectionValues = section.map((x) => x.getAttribute('value'));
@@ -233,9 +224,12 @@ function findOverMaxPossibleNumberWihinSelection(section, errorType, max){
     
 }
 
-// Function to find duplicate within set section (col, row, zone or zoneTwo)
-    // section : an array with the cells that we want to check
-    // errorType : the error type we want to change
+
+/**
+ * @description                 - Finds duplicate within set section (col, row, zone or zoneTwo)
+ * @param {Array} section       - An array with the HTML elements of the cells we want to check 
+ * @param {String} errorType    - the error type we want to change 'errorCol' || 'errorRow' || 'errorZone'
+ */
 function findDuplicateWithinSelection(section, errorType){
 
 
@@ -261,9 +255,12 @@ function findDuplicateWithinSelection(section, errorType){
 
 }
 
-// Function to check if there are 3 or more of the same value in a row
-    // section : an array with the cells that we want to check
-    // errorType : 'errorRow', 'errorCol', 'errorZone' or 'errorZoneTwo'
+
+/**
+ * @description                 - Checks if there are 3 or more of the same value in a row
+ * @param {Array} section       - An array with the HTML elements of the cells we want to check 
+ * @param {String} errorType    - The error type we want to change 'errorCol' || 'errorRow' 
+ */
 function findMultipleInARowWithinSelection(section, errorType){
     for (let i = 0; i < (section.length); i++) {
 
@@ -306,10 +303,13 @@ function findMultipleInARowWithinSelection(section, errorType){
     }
 }
 
-// Function to check if two rows or cols are identical and sets errorZoneTwo to true for all the cells in the duplicate row/col
-    // zone = 0 for rows and 1 for cols
-    // errorType = 'errorZone' for rows and 'errorZoneTwo' for cols
-    // gameType = game type as a string
+
+/**
+ * @description                 - Check if two rows or cols are identical and sets and sets the errorType attribute to true or false depending on the results
+ * @param {Number} zone         - 0 for rows and 1 for columns
+ * @param {String} errorType    - The error type we want to change 'errorZone' for rows and 'errorZoneTwo' for columns
+ * @param {String} gameType     - The name of the game   
+ */
 function checkIdenticalRowOrCol(zone, errorType, gameType){
     // Stores all cells elements in allCells
     let allCells = document.querySelectorAll(`.cell.${gameType}`);
